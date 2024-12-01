@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon --experimental-json-modules -r dotenv/config Server/src/index.js"
+    "dev": "nodemon --experimental-json-modules -r dotenv/config src/index.js"
   },
   "author": "Sarvan Maurya",
   "license": "ISC",
