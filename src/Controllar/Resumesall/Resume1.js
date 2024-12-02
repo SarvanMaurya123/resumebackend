@@ -2,7 +2,6 @@ import uploadOnCloudinary from '../../utiles/Cloudinary.js';
 import Resume1 from '../../Modules/Resuma.module.js';
 import User from '../../Modules/User.module.js';
 import mongoose from 'mongoose';
-import { console } from 'inspector';
 
 // Create Profile
 const createProfile = async (req, res) => {
@@ -13,12 +12,11 @@ const createProfile = async (req, res) => {
 
     if (req.file) {
         try {
-            const cloudinaryResponse = await uploadOnCloudinary(req.file.path);
-            if (cloudinaryResponse) {
-                profilePic = cloudinaryResponse.secure_url; // Set the profile picture URL
-            }
+            const cloudinaryResponse = await uploadOnCloudinary(req.file.buffer, `profile_${req.user._id}`);
+            profilePic = cloudinaryResponse.secure_url;
         } catch (error) {
-            return res.status(500).send('Error uploading to Cloudinary');
+            console.log("Failed to upload image to Cloudinary", error);
+            return res.status(500).json({ error: 'Failed to upload image to Cloudinary' });
         }
     }
 

@@ -1,15 +1,22 @@
 import multer from 'multer';
-import path from 'path';
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './Public/temp'); // Specify the destination where uploaded files will be stored temporarily
+// Configure multer to use memory storage
+const storage = multer.memoryStorage();
+
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 5 * 1024 * 1024, // Limit file size to 5 MB
+        files: 1,                 // Allow only 1 file per request
     },
-    filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname)); // Define the filename for uploaded files
-    }
+    fileFilter: (req, file, cb) => {
+        // Optional: Restrict file types
+        const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+        if (!allowedTypes.includes(file.mimetype)) {
+            return cb(new Error('Only JPEG, PNG, and PDF files are allowed!'), false);
+        }
+        cb(null, true);
+    },
 });
-
-const upload = multer({ storage: storage });
 
 export default upload;
